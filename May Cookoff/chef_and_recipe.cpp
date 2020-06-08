@@ -3,6 +3,9 @@
 * ****************************************
 */
 
+// https://www.codechef.com/viewsolution/34011399
+// https://www.codechef.com/problems/CHEFRECP
+
 #pragma GCC optimize("Ofast")  
 #pragma GCC target("avx,avx2,fma") 
 
@@ -53,55 +56,38 @@ int main() {
     while(cases--)
     {
         fastscan(n);
-        int recipe[n], types[1000];    
-        unordered_set<int> seq; 
-        
-        for(int i = 0; i<999; i++)
-            types[i] = 0;
-            
-        for(int i = 0; i<n; i++)
-        {
-            fastscan(recipe[i]);
-            types[recipe[i]]++;
-        }
-        counter = 0;
-        for(int i = 0; i<999; i++)
-        {
-            if(types[i] != 0)
-            {
-                counter++;
-                seq.insert(types[i]);  
-            }
-        }
-        if((counter != seq.size()))
-        {            
-            cout<<"NO\n";
-            continue; 
-        }
+        int recipe[n];
 
-        temp = recipe[0];
-        int i;
-        for(i = 0; i< n - 1; i++)  
-        {
-            for(int j = i; j < n; j++)
+        unordered_map<int, int> mp_1, mp_2; 
+       
+        for(int i = 0; i<n; i++){
+            fastscan(recipe[i]);
+            mp_1[recipe[i]]++;
+        }
+        bool y = false;
+        for(auto x : mp_1){
+            mp_2[x.second]++;
+            if(mp_2[x.second] > 1)
             {
-                if(recipe[j] == temp)
-                    continue;
-                else
-                {
-                    for(int k = j + 1; k < n; k++)
-                    {
-                        if(recipe[k] == temp)
-                        {
-                            cout<<"NO\n";
-                            goto outer;
-                        }
-                    }
-                }
+                cout<<"NO\n";
+                y = true;
+                break;
             }
-        }      
-        outer: if(i == (n-1))
-            cout<<"YES\n";
+        }
+        if(y) continue;    
+        
+        bool visited[1001];
+        for(int i = 0; i < 1001; i++) visited[i] = false;
+        visited[recipe[0]] = true;
+        int i = 1;
+        for(; i < n; i++)
+        {
+            if(recipe[i] == recipe[i-1]) continue;
+            if(visited[recipe[i]]) break;
+            visited[recipe[i]] = true;
+        }
+        if(i == n) cout<<"YES\n";
+        else  cout<<"NO\n";
     }
 	return 0;
 }
